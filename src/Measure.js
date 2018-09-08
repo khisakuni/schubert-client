@@ -29,7 +29,7 @@ class Measure extends PureComponent {
       const v = new Vex.Flow.Voice({
         clef: 'treble',
         num_beats: voice.numBeats,
-        beat_value: voice.beatValue
+        beat_value: voice.beatValue,
       });
       voiceIDToVFVoice[voice.id] = v;
 
@@ -39,7 +39,7 @@ class Measure extends PureComponent {
           const n = new Vex.Flow.StaveNote({
             clef: 'treble',
             keys: note.keys,
-            duration: note.duration
+            duration: note.duration,
           });
           if (note.selected) {
             n.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
@@ -81,14 +81,14 @@ Measure.propTypes = {
   y: PropTypes.number,
   context: PropTypes.shape(),
   onNoteClick: PropTypes.func,
-  notes: PropTypes.arrayOf(PropTypes.shape())
+  notes: PropTypes.arrayOf(PropTypes.shape()),
 };
 
 const makeMapStateToProps = () => {
   const getVoicesForMeasure = makeGetVoicesForMeasure();
   return (state, props) => ({
     voices: getVoicesForMeasure(state, props),
-    notes: state.score.notes
+    notes: state.score.notes,
   });
 };
 

@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 
 import Input from '../shared/Input';
 
@@ -16,19 +16,38 @@ class Signup extends PureComponent {
 
   update(name) {
     return e => {
-      this.setState({[name]: e.target.value})
-    }
+      this.setState({ [name]: e.target.value });
+    };
   }
 
   render() {
-    const {username, email, password, confirmPassword} = this.state;
+    const { username, email, password, confirmPassword } = this.state;
 
     return (
       <div>
-        <Input name="Username" value={username} onChange={this.update('username')} />
-        <Input name="Email" type="email" value={email} onChange={this.update('email')}/>
-        <Input name="Password" type="password" value={password} onChange={this.update('password')}/>
-        <Input name="Confirm Password" type="password" value={confirmPassword} onChange={this.update('confirmPassword')}/>
+        <Input
+          name="Username"
+          value={username}
+          onChange={this.update('username')}
+        />
+        <Input
+          name="Email"
+          type="email"
+          value={email}
+          onChange={this.update('email')}
+        />
+        <Input
+          name="Password"
+          type="password"
+          value={password}
+          onChange={this.update('password')}
+        />
+        <Input
+          name="Confirm Password"
+          type="password"
+          value={confirmPassword}
+          onChange={this.update('confirmPassword')}
+        />
       </div>
     );
   }
@@ -37,4 +56,3 @@ class Signup extends PureComponent {
 Signup.path = '/signup';
 
 export default Signup;
-

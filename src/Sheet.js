@@ -58,7 +58,7 @@ Sheet.propTypes = {
   width: PropTypes.number,
   staves: PropTypes.arrayOf(PropTypes.shape()),
   onNoteClick: PropTypes.func,
-  id: PropTypes.string
+  id: PropTypes.string,
 };
 
 Sheet.defaultProps = {
@@ -66,7 +66,7 @@ Sheet.defaultProps = {
   width: 0,
   staves: [],
   onNoteClick: () => {},
-  id: ''
+  id: '',
 };
 
 const makeMapStateToProps = () => {

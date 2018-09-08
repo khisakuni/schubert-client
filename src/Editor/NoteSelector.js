@@ -18,8 +18,8 @@ const generateKeys = () => {
 const styles = {
   li: {
     cursor: 'pointer',
-    display: 'inline'
-  }
+    display: 'inline',
+  },
 };
 
 const NoteSelector = props => {
@@ -42,19 +42,22 @@ const NoteSelector = props => {
 };
 
 NoteSelector.propTypes = {
-  selectedNote: PropTypes.shape()
+  selectedNote: PropTypes.shape(),
 };
 
 NoteSelector.defaultProps = {
-  selectedNote: null
+  selectedNote: null,
 };
 
 const mapStateToProps = state => ({
-  selectedNote: getSelectedNote(state)
+  selectedNote: getSelectedNote(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  changeKey: (id, key) => dispatch(changeKey(id, key))
+  changeKey: (id, key) => dispatch(changeKey(id, key)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(NoteSelector);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NoteSelector);

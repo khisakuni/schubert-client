@@ -26,31 +26,31 @@ const data = {
                   notes: [
                     {
                       keys: ['c/4'],
-                      duration: '8'
+                      duration: '8',
                     },
                     {
                       keys: ['c/4'],
-                      duration: '8'
+                      duration: '8',
                     },
                     {
                       keys: ['c/4'],
-                      duration: '8'
+                      duration: '8',
                     },
                     {
                       keys: ['c/4'],
-                      duration: '8'
+                      duration: '8',
                     },
                     {
                       keys: ['c/4'],
-                      duration: 'q'
+                      duration: 'q',
                     },
                     {
                       keys: ['c/4'],
-                      duration: 'q'
-                    }
-                  ]
-                }
-              ]
+                      duration: 'q',
+                    },
+                  ],
+                },
+              ],
             },
             {
               clefs: [],
@@ -62,29 +62,29 @@ const data = {
                   notes: [
                     {
                       keys: ['c/4'],
-                      duration: 'q'
+                      duration: 'q',
                     },
                     {
                       keys: ['c/4'],
-                      duration: 'q'
+                      duration: 'q',
                     },
                     {
                       keys: ['c/4'],
-                      duration: 'q'
+                      duration: 'q',
                     },
                     {
                       keys: ['c/4'],
-                      duration: 'q'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+                      duration: 'q',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 class Editor extends PureComponent {
@@ -114,20 +114,23 @@ class Editor extends PureComponent {
 Editor.propTypes = {
   load: PropTypes.func.isRequired,
   selectNote: PropTypes.func.isRequired,
-  selectedNote: PropTypes.shape()
+  selectedNote: PropTypes.shape(),
 };
 
 Editor.defaultProps = {
-  selectedNote: null
+  selectedNote: null,
 };
 
 const mapStateToProps = state => ({
   ...state.score,
-  selectedNote: getSelectedNote(state)
+  selectedNote: getSelectedNote(state),
 });
 const mapDispatchToProps = dispatch => ({
   load: score => dispatch(load(score)),
-  selectNote: ({ id }) => dispatch(selectNote(id))
+  selectNote: ({ id }) => dispatch(selectNote(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Editor);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Editor);

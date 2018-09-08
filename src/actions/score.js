@@ -20,7 +20,7 @@ export const changeKey = (id, key) => ({ type: CHANGE_KEY, data: { id, key } });
 
 export const changeDuration = (id, duration) => ({
   type: CHANGE_DURATION,
-  data: { id, duration }
+  data: { id, duration },
 });
 
 export const load = ({ sheets }) => dispatch =>
@@ -29,7 +29,7 @@ export const load = ({ sheets }) => dispatch =>
     const sheetid = sheetID(sheetIndex);
     dispatch({
       type: LOAD_SHEET,
-      data: { [sheetid]: { ...sheet, id: sheetid, index: sheetIndex } }
+      data: { [sheetid]: { ...sheet, id: sheetid, index: sheetIndex } },
     });
 
     // Load staves
@@ -42,9 +42,9 @@ export const load = ({ sheets }) => dispatch =>
             ...staff,
             id: staffid,
             sheetID: sheetid,
-            index: staffIndex
-          }
-        }
+            index: staffIndex,
+          },
+        },
       });
 
       // Load measures
@@ -57,9 +57,9 @@ export const load = ({ sheets }) => dispatch =>
               ...measure,
               id: measureid,
               staffID: staffid,
-              index: measureIndex
-            }
-          }
+              index: measureIndex,
+            },
+          },
         });
 
         // Load voices
@@ -72,9 +72,9 @@ export const load = ({ sheets }) => dispatch =>
                 ...voice,
                 id: voiceid,
                 measureID: measureid,
-                index: voiceIndex
-              }
-            }
+                index: voiceIndex,
+              },
+            },
           });
 
           // Load notes
@@ -87,9 +87,9 @@ export const load = ({ sheets }) => dispatch =>
                   ...note,
                   id: noteid,
                   voiceID: voiceid,
-                  index: noteIndex
-                }
-              }
+                  index: noteIndex,
+                },
+              },
             });
           });
         });

@@ -8,7 +8,7 @@ import {
   SELECT_NOTE,
   CHANGE_KEY,
   CHANGE_DURATION,
-  noteID
+  noteID,
 } from '../actions/score';
 
 const durationToRatio = {
@@ -17,7 +17,7 @@ const durationToRatio = {
   q: 0.25,
   '8': 0.125,
   '16': 0.0625,
-  '32': 0.03125
+  '32': 0.03125,
 };
 
 const initialState = {
@@ -25,7 +25,7 @@ const initialState = {
   staves: {},
   measures: {},
   voices: {},
-  notes: {}
+  notes: {},
 };
 
 const reducer = (state = initialState, { type, data }) => {
@@ -48,16 +48,16 @@ const reducer = (state = initialState, { type, data }) => {
             (a, e) => ({ ...a, [e]: { ...state.notes[e], selected: false } }),
             {}
           ),
-          [data.id]: { ...state.notes[data.id], selected: true }
-        }
+          [data.id]: { ...state.notes[data.id], selected: true },
+        },
       };
     case CHANGE_KEY:
       return {
         ...state,
         notes: {
           ...state.notes,
-          [data.id]: { ...state.notes[data.id], keys: [data.key] }
-        }
+          [data.id]: { ...state.notes[data.id], keys: [data.key] },
+        },
       };
     case CHANGE_DURATION: {
       const { notes, voices } = state;
@@ -73,7 +73,7 @@ const reducer = (state = initialState, { type, data }) => {
       if (toDuration > fromDuration) {
         const toDelete = voiceNotes.slice(
           note.index + 1,
-          note.index + fromDuration / toDuration * voice.numBeats
+          note.index + (fromDuration / toDuration) * voice.numBeats
         );
 
         const updatedNotes = omit(notes, toDelete.map(n => n.id));
@@ -86,7 +86,7 @@ const reducer = (state = initialState, { type, data }) => {
             a[noteID(voice.id, i)] = {
               ...e,
               id: noteID(voice.id, i),
-              index: i
+              index: i,
             };
             return a;
           }, {});
@@ -100,7 +100,7 @@ const reducer = (state = initialState, { type, data }) => {
 
         return {
           ...state,
-          notes: { ...updatedVoiceNotes, ...other }
+          notes: { ...updatedVoiceNotes, ...other },
         };
       }
       const addCount = fromDuration / toDuration;
@@ -111,7 +111,7 @@ const reducer = (state = initialState, { type, data }) => {
           index: note.index + i,
           id: noteID(voice.id, note.index + i),
           selected: false,
-          duration
+          duration,
         });
       }
       voiceNotes.slice(note.index + 1).forEach(n => {
@@ -127,8 +127,8 @@ const reducer = (state = initialState, { type, data }) => {
             a[e.id] = e;
             return a;
           }, {}),
-          [data.id]: { ...state.notes[id], duration }
-        }
+          [data.id]: { ...state.notes[id], duration },
+        },
       };
     }
     default:

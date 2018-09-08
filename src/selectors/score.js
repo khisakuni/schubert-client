@@ -25,7 +25,7 @@ export const makeGetVoicesForMeasure = () =>
       .filter(voice => voice.measureID === id)
       .map(voice => ({
         ...voice,
-        notes: values(notes).filter(note => note.voiceID === voice.id)
+        notes: values(notes).filter(note => note.voiceID === voice.id),
       }))
   );
 

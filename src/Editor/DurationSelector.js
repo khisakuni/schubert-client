@@ -10,7 +10,7 @@ const durations = [
   { name: 'quarter', value: 'q' },
   { name: 'eigth', value: '8' },
   { name: 'sixteenth', value: '16' },
-  { name: '32nth', value: '32' }
+  { name: '32nth', value: '32' },
 ];
 
 const DurationSelector = props => (
@@ -29,11 +29,14 @@ const DurationSelector = props => (
 
 const mapStateToProps = state => ({
   selectedNote: getSelectedNote(state),
-  voices: state.voices
+  voices: state.voices,
 });
 
 const mapDispatchToProps = dispatch => ({
-  changeDuration: (id, duration) => dispatch(changeDuration(id, duration))
+  changeDuration: (id, duration) => dispatch(changeDuration(id, duration)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DurationSelector);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DurationSelector);
