@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import Input from '../shared/Input';
+import Button from '../shared/Button';
 
 class Signup extends PureComponent {
   constructor(props) {
@@ -48,6 +49,7 @@ class Signup extends PureComponent {
           value={confirmPassword}
           onChange={this.update('confirmPassword')}
         />
+        <Button value="Submit" submit />
       </div>
     );
   }
