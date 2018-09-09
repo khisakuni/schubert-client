@@ -1,9 +1,12 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
+import API from '../shared/API';
 import Input from '../shared/Input';
 import Button from '../shared/Button';
+import { post } from '../actions/api';
 
-class Signup extends PureComponent {
+class SignupForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +27,8 @@ class Signup extends PureComponent {
 
   onSubmit(e) {
     e.preventDefault();
-    console.log('submitting >>>>', e);
+    const { postSignup } = this.props;
+    postSignup(this.state);
   }
 
   render() {
@@ -63,6 +67,19 @@ class Signup extends PureComponent {
   }
 }
 
-Signup.path = '/signup';
+const Signup = props => (
+  <API component={SignupForm} endpoint="https://example.com" {...props} />
+);
 
-export default Signup;
+const mapDispatchToProps = dispatch => ({
+  postSignup: values => dispatch(post('https://example.com', values)),
+});
+
+const Container = connect(
+  null,
+  mapDispatchToProps
+)(Signup);
+
+Container.path = '/signup';
+
+export default Container;
