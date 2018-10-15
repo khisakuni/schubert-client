@@ -13,6 +13,7 @@ class App extends Component {
         <Switch>
           <Route component={Dash} exact path="/" />
           <Route component={Signup} path={Signup.path} />
+          <Route component={Editor} path="/editor" />
         </Switch>
         {/*<Editor />*/}
       </div>

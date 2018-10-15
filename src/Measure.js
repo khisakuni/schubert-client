@@ -22,9 +22,6 @@ class Measure extends PureComponent {
 
     const voiceIDToVFVoice = {};
 
-    const m = new Vex.Flow.Stave(x, y, width);
-    m.setContext(context).draw();
-
     const vfVoices = voices.map(voice => {
       const v = new Vex.Flow.Voice({
         clef: 'treble',
@@ -53,7 +50,11 @@ class Measure extends PureComponent {
       return v;
     });
 
-    new Vex.Flow.Formatter().joinVoices(vfVoices).format(vfVoices, width - 20);
+    const formatter = new Vex.Flow.Formatter()
+      .joinVoices(vfVoices)
+      .format(vfVoices, width - 20);
+    const m = new Vex.Flow.Stave(x, y, width);
+    m.setContext(context).draw();
 
     Object.keys(voiceIDToVFVoice).forEach(id => {
       const voice = voiceIDToVFVoice[id];
