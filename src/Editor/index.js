@@ -11,11 +11,39 @@ import { getSelectedNote } from '../selectors/score';
 const data = {
   sheets: [
     {
-      height: 200,
+      height: 800,
       width: 800,
       staves: [
         {
           measures: [
+            {
+              clefs: [],
+              timeSignatures: [],
+              voices: [
+                {
+                  numBeats: 4,
+                  beatValue: 4,
+                  notes: [
+                    {
+                      keys: ['c/4'],
+                      duration: 'q',
+                    },
+                    {
+                      keys: ['c/4'],
+                      duration: 'q',
+                    },
+                    {
+                      keys: ['c/4'],
+                      duration: 'q',
+                    },
+                    {
+                      keys: ['c/4'],
+                      duration: 'q',
+                    },
+                  ],
+                },
+              ],
+            },
             {
               clefs: [],
               timeSignatures: [],

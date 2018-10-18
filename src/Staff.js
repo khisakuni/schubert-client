@@ -9,6 +9,36 @@ import {
   makeGetVoicesForMeasure,
 } from './selectors/score';
 
+const voicesFromMeasure = measure => {
+  const voiceIDToVFVoice = {};
+  const vfVoices = measure.voices.map(voice => {
+    const v = new Vex.Flow.Voice({
+      clef: 'treble',
+      num_beats: voice.numBeats,
+      beat_value: voice.beatValue,
+    });
+    voiceIDToVFVoice[voice.id] = v;
+
+    const vfNotes = voice.notes.sort((a, b) => a.index - b.index).map(note => {
+      const n = new Vex.Flow.StaveNote({
+        clef: 'treble',
+        keys: note.keys,
+        duration: note.duration,
+      });
+      if (note.selected) {
+        n.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
+      } else {
+        n.setStyle({ fillStyle: 'black', strokeStyle: 'black' });
+      }
+      return n;
+    });
+
+    v.addTickables(vfNotes);
+    return v;
+  });
+  return voiceIDToVFVoice;
+};
+
 class Staff extends PureComponent {
   render() {
     const {
@@ -25,54 +55,10 @@ class Staff extends PureComponent {
       return <div />;
     }
 
-    /*
-     * =========== Notes =============
-     *
-     * Calculating measureWidth by dividing width of sheet by measures is wrong.
-     * This doesn't support stacking measures.
-     *
-     * Need to: 
-     * - Know max-width of sheet.
-     * - Keep running total of row length.
-     * - If row length exceeds max-width
-     *   * Start new row.
-     *   * Reset row length total.
-     *   * Calculate new y position.
-     *
-     */
     let rowWidth = 0;
     const measureHeight = 80;
     let staffCount = 1;
     return measures.map((measure, measureIndex) => {
-      const voiceIDToVFVoice = {};
-      const vfVoices = measure.voices.map(voice => {
-        const v = new Vex.Flow.Voice({
-          clef: 'treble',
-          num_beats: voice.numBeats,
-          beat_value: voice.beatValue,
-        });
-        voiceIDToVFVoice[voice.id] = v;
-
-        const vfNotes = voice.notes
-          .sort((a, b) => a.index - b.index)
-          .map(note => {
-            const n = new Vex.Flow.StaveNote({
-              clef: 'treble',
-              keys: note.keys,
-              duration: note.duration,
-            });
-            if (note.selected) {
-              n.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
-            } else {
-              n.setStyle({ fillStyle: 'black', strokeStyle: 'black' });
-            }
-            return n;
-          });
-
-        v.addTickables(vfNotes);
-        return v;
-      });
-
       let measureWidth = width / measures.length;
       let x = rowWidth;
       let y = measureHeight * staffCount;
@@ -80,19 +66,26 @@ class Staff extends PureComponent {
 
       const startX = m.getNoteStartX();
 
+      let voiceIDToVFVoice = voicesFromMeasure(measure);
+      let vfVoices = Object.values(voiceIDToVFVoice);
+
       const formatter = new Vex.Flow.Formatter()
         .joinVoices(vfVoices)
-        .format(vfVoices, rowWidth + measureWidth - startX);
+        .formatToStave(vfVoices, m);
       const minWidth = formatter.getMinTotalWidth();
 
       if (minWidth > measureWidth) {
         measureWidth = minWidth;
+        voiceIDToVFVoice = voicesFromMeasure(measure);
+        vfVoices = Object.values(voiceIDToVFVoice);
         m = new Vex.Flow.Stave(x, y, measureWidth);
+        new Vex.Flow.Formatter()
+          .joinVoices(vfVoices)
+          .formatToStave(vfVoices, m);
       }
 
       rowWidth += measureWidth;
 
-      console.log('row width >>>', rowWidth, width);
       if (rowWidth > width) {
         rowWidth = 0;
         staffCount++;
@@ -100,6 +93,7 @@ class Staff extends PureComponent {
         x = rowWidth;
 
         m = new Vex.Flow.Stave(x, y, measureWidth);
+        formatter.formatToStave(vfVoices, m);
       }
 
       return (
