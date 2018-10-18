@@ -25,13 +25,25 @@ class Staff extends PureComponent {
       return <div />;
     }
 
+    /*
+     * =========== Notes =============
+     *
+     * Calculating measureWidth by dividing width of sheet by measures is wrong.
+     * This doesn't support stacking measures.
+     *
+     * Need to: 
+     * - Know max-width of sheet.
+     * - Keep running total of row length.
+     * - If row length exceeds max-width
+     *   * Start new row.
+     *   * Reset row length total.
+     *   * Calculate new y position.
+     *
+     */
+    let rowWidth = 0;
+    const measureHeight = 80;
+    let staffCount = 1;
     return measures.map((measure, measureIndex) => {
-      //const measureWidth = width / measures.length;
-
-      const measureWidth = 400;
-      const x = measureWidth * measureIndex;
-      const y = height * index;
-      const m = new Vex.Flow.Stave(x, y, measureWidth);
       const voiceIDToVFVoice = {};
       const vfVoices = measure.voices.map(voice => {
         const v = new Vex.Flow.Voice({
@@ -58,15 +70,37 @@ class Staff extends PureComponent {
           });
 
         v.addTickables(vfNotes);
-        v.setStave(m);
         return v;
       });
+
+      let measureWidth = width / measures.length;
+      let x = rowWidth;
+      let y = measureHeight * staffCount;
+      let m = new Vex.Flow.Stave(x, y, measureWidth);
 
       const startX = m.getNoteStartX();
 
       const formatter = new Vex.Flow.Formatter()
         .joinVoices(vfVoices)
-        .format(vfVoices, measureWidth + measureWidth * measureIndex - startX);
+        .format(vfVoices, rowWidth + measureWidth - startX);
+      const minWidth = formatter.getMinTotalWidth();
+
+      if (minWidth > measureWidth) {
+        measureWidth = minWidth;
+        m = new Vex.Flow.Stave(x, y, measureWidth);
+      }
+
+      rowWidth += measureWidth;
+
+      console.log('row width >>>', rowWidth, width);
+      if (rowWidth > width) {
+        rowWidth = 0;
+        staffCount++;
+        y = measureHeight * staffCount;
+        x = rowWidth;
+
+        m = new Vex.Flow.Stave(x, y, measureWidth);
+      }
 
       return (
         <Measure
