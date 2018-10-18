@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import Vex from 'vexflow';
 import { connect } from 'react-redux';
 
 import { makeGetVoicesForMeasure } from './selectors/score';
@@ -19,41 +18,6 @@ class Measure extends PureComponent {
       context.svg.removeChild(this.group);
     }
     this.group = context.openGroup();
-
-    // const voiceIDToVFVoice = {};
-
-    // const vfVoices = voices.map(voice => {
-    //   const v = new Vex.Flow.Voice({
-    //     clef: 'treble',
-    //     num_beats: voice.numBeats,
-    //     beat_value: voice.beatValue,
-    //   });
-    //   voiceIDToVFVoice[voice.id] = v;
-
-    //   const vfNotes = voice.notes
-    //     .sort((a, b) => a.index - b.index)
-    //     .map(note => {
-    //       const n = new Vex.Flow.StaveNote({
-    //         clef: 'treble',
-    //         keys: note.keys,
-    //         duration: note.duration,
-    //       });
-    //       if (note.selected) {
-    //         n.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
-    //       } else {
-    //         n.setStyle({ fillStyle: 'black', strokeStyle: 'black' });
-    //       }
-    //       return n;
-    //     });
-
-    //   v.addTickables(vfNotes);
-    //   return v;
-    // });
-
-    // const formatter = new Vex.Flow.Formatter()
-    //   .joinVoices(vfVoices)
-    //   .format(vfVoices, width - 20);
-    // const m = new Vex.Flow.Stave(x, y, width);
 
     m.setContext(context).draw();
 
