@@ -13,57 +13,56 @@ class Measure extends PureComponent {
   }
 
   render() {
-    const { voices, width, x, y, context, onNoteClick, notes } = this.props;
+    const { context, onNoteClick, notes, m, vfVoices } = this.props;
 
     if (this.group) {
       context.svg.removeChild(this.group);
     }
     this.group = context.openGroup();
 
-    const voiceIDToVFVoice = {};
+    // const voiceIDToVFVoice = {};
 
-    const vfVoices = voices.map(voice => {
-      const v = new Vex.Flow.Voice({
-        clef: 'treble',
-        num_beats: voice.numBeats,
-        beat_value: voice.beatValue,
-      });
-      voiceIDToVFVoice[voice.id] = v;
+    // const vfVoices = voices.map(voice => {
+    //   const v = new Vex.Flow.Voice({
+    //     clef: 'treble',
+    //     num_beats: voice.numBeats,
+    //     beat_value: voice.beatValue,
+    //   });
+    //   voiceIDToVFVoice[voice.id] = v;
 
-      const vfNotes = voice.notes
-        .sort((a, b) => a.index - b.index)
-        .map(note => {
-          const n = new Vex.Flow.StaveNote({
-            clef: 'treble',
-            keys: note.keys,
-            duration: note.duration,
-          });
-          if (note.selected) {
-            n.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
-          } else {
-            n.setStyle({ fillStyle: 'black', strokeStyle: 'black' });
-          }
-          return n;
-        });
+    //   const vfNotes = voice.notes
+    //     .sort((a, b) => a.index - b.index)
+    //     .map(note => {
+    //       const n = new Vex.Flow.StaveNote({
+    //         clef: 'treble',
+    //         keys: note.keys,
+    //         duration: note.duration,
+    //       });
+    //       if (note.selected) {
+    //         n.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
+    //       } else {
+    //         n.setStyle({ fillStyle: 'black', strokeStyle: 'black' });
+    //       }
+    //       return n;
+    //     });
 
-      v.addTickables(vfNotes);
-      return v;
-    });
+    //   v.addTickables(vfNotes);
+    //   return v;
+    // });
 
-    const formatter = new Vex.Flow.Formatter()
-      .joinVoices(vfVoices)
-      .format(vfVoices, width - 20);
-    const m = new Vex.Flow.Stave(x, y, width);
+    // const formatter = new Vex.Flow.Formatter()
+    //   .joinVoices(vfVoices)
+    //   .format(vfVoices, width - 20);
+    // const m = new Vex.Flow.Stave(x, y, width);
+
     m.setContext(context).draw();
 
-    Object.keys(voiceIDToVFVoice).forEach(id => {
-      const voice = voiceIDToVFVoice[id];
+    Object.keys(vfVoices).forEach(id => {
+      const voice = vfVoices[id];
       voice.draw(context, m);
 
       voice.tickables.forEach((t, i) => {
         t.attrs.el.onclick = () => {
-          console.log('click >>>', noteID(id, i));
-          console.log('click >>>>>>', notes);
           onNoteClick(notes[noteID(id, i)]);
         };
       });

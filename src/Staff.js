@@ -25,13 +25,14 @@ class Staff extends PureComponent {
       return <div />;
     }
 
-    let lastWidth = 0;
-
     return measures.map((measure, measureIndex) => {
-      const measureWidth = width / measures.length;
+      //const measureWidth = width / measures.length;
 
+      const measureWidth = 400;
+      const x = measureWidth * measureIndex;
+      const y = height * index;
+      const m = new Vex.Flow.Stave(x, y, measureWidth);
       const voiceIDToVFVoice = {};
-
       const vfVoices = measure.voices.map(voice => {
         const v = new Vex.Flow.Voice({
           clef: 'treble',
@@ -57,29 +58,24 @@ class Staff extends PureComponent {
           });
 
         v.addTickables(vfNotes);
+        v.setStave(m);
         return v;
       });
 
+      const startX = m.getNoteStartX();
+
       const formatter = new Vex.Flow.Formatter()
         .joinVoices(vfVoices)
-        .format(vfVoices, width - 20);
-
-      const minWidth = formatter.getMinTotalWidth();
-      const w = minWidth > measureWidth ? minWidth : measureWidth;
-
-      const lastX = lastWidth;
-      lastWidth = w;
-      const y = height * index;
+        .format(vfVoices, measureWidth + measureWidth * measureIndex - startX);
 
       return (
         <Measure
           key={measureIndex}
-          width={w}
-          x={lastX}
-          y={y}
           context={context}
           id={measureID(id, measureIndex)}
           onNoteClick={onNoteClick}
+          m={m}
+          vfVoices={voiceIDToVFVoice}
         />
       );
     });

@@ -12,7 +12,7 @@ const data = {
   sheets: [
     {
       height: 200,
-      width: 400,
+      width: 800,
       staves: [
         {
           measures: [
@@ -26,19 +26,11 @@ const data = {
                   notes: [
                     {
                       keys: ['c/4'],
-                      duration: '8',
+                      duration: 'q',
                     },
                     {
                       keys: ['c/4'],
-                      duration: '8',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: '8',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: '8',
+                      duration: 'q',
                     },
                     {
                       keys: ['c/4'],
@@ -62,11 +54,19 @@ const data = {
                   notes: [
                     {
                       keys: ['c/4'],
-                      duration: 'q',
+                      duration: '8',
                     },
                     {
                       keys: ['c/4'],
-                      duration: 'q',
+                      duration: '8',
+                    },
+                    {
+                      keys: ['c/4'],
+                      duration: '8',
+                    },
+                    {
+                      keys: ['c/4'],
+                      duration: '8',
                     },
                     {
                       keys: ['c/4'],
