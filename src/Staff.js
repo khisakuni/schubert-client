@@ -87,13 +87,13 @@ class Staff extends PureComponent {
       rowWidth += measureWidth;
 
       if (rowWidth > width) {
-        rowWidth = 0;
         staffCount++;
         y = measureHeight * staffCount;
-        x = rowWidth;
+        x = 0;
 
         m = new Vex.Flow.Stave(x, y, measureWidth);
         formatter.formatToStave(vfVoices, m);
+        rowWidth = measureWidth;
       }
 
       return (
