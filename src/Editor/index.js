@@ -9,104 +9,96 @@ import { load, selectNote } from '../actions/score';
 import { getSelectedNote } from '../selectors/score';
 
 const data = {
-  sheets: [
+  height: 800,
+  width: 800,
+  measures: [
     {
-      height: 800,
-      width: 800,
-      staves: [
+      clefs: [],
+      timeSignatures: [],
+      voices: [
         {
-          measures: [
+          numBeats: 4,
+          beatValue: 4,
+          notes: [
             {
-              clefs: [],
-              timeSignatures: [],
-              voices: [
-                {
-                  numBeats: 4,
-                  beatValue: 4,
-                  notes: [
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                  ],
-                },
-              ],
+              keys: ['c/4'],
+              duration: 'q',
             },
             {
-              clefs: [],
-              timeSignatures: [],
-              voices: [
-                {
-                  numBeats: 4,
-                  beatValue: 4,
-                  notes: [
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                  ],
-                },
-              ],
+              keys: ['c/4'],
+              duration: 'q',
             },
             {
-              clefs: [],
-              timeSignatures: [],
-              voices: [
-                {
-                  numBeats: 4,
-                  beatValue: 4,
-                  notes: [
-                    {
-                      keys: ['c/4'],
-                      duration: '8',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: '8',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: '8',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: '8',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                    {
-                      keys: ['c/4'],
-                      duration: 'q',
-                    },
-                  ],
-                },
-              ],
+              keys: ['c/4'],
+              duration: 'q',
+            },
+            {
+              keys: ['c/4'],
+              duration: 'q',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      clefs: [],
+      timeSignatures: [],
+      voices: [
+        {
+          numBeats: 4,
+          beatValue: 4,
+          notes: [
+            {
+              keys: ['c/4'],
+              duration: 'q',
+            },
+            {
+              keys: ['c/4'],
+              duration: 'q',
+            },
+            {
+              keys: ['c/4'],
+              duration: 'q',
+            },
+            {
+              keys: ['c/4'],
+              duration: 'q',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      clefs: [],
+      timeSignatures: [],
+      voices: [
+        {
+          numBeats: 4,
+          beatValue: 4,
+          notes: [
+            {
+              keys: ['c/4'],
+              duration: '8',
+            },
+            {
+              keys: ['c/4'],
+              duration: '8',
+            },
+            {
+              keys: ['c/4'],
+              duration: '8',
+            },
+            {
+              keys: ['c/4'],
+              duration: '8',
+            },
+            {
+              keys: ['c/4'],
+              duration: 'q',
+            },
+            {
+              keys: ['c/4'],
+              duration: 'q',
             },
           ],
         },

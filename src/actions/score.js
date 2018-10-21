@@ -10,7 +10,7 @@ export const CHANGE_DURATION = 'CHANGE_DURATION';
 
 export const sheetID = index => `sheet${index}`;
 export const staffID = (sheetid, index) => `${sheetid}-staff${index}`;
-export const measureID = (staffid, index) => `${staffid}-measure${index}`;
+export const measureID = index => `measure${index}`;
 export const voiceID = (measureid, index) => `${measureid}-voice${index}`;
 export const noteID = (voiceid, index) => `${voiceid}-note${index}`;
 
@@ -23,75 +23,49 @@ export const changeDuration = (id, duration) => ({
   data: { id, duration },
 });
 
-export const load = ({ sheets }) => dispatch =>
-  // Load sheets
-  sheets.map((sheet, sheetIndex) => {
-    const sheetid = sheetID(sheetIndex);
+export const load = ({ measures }) => dispatch =>
+  // Load measures
+  measures.map((measure, measureIndex) => {
+    const measureid = measureID(measureIndex);
     dispatch({
-      type: LOAD_SHEET,
-      data: { [sheetid]: { ...sheet, id: sheetid, index: sheetIndex } },
+      type: LOAD_MEASURE,
+      data: {
+        [measureid]: {
+          ...measure,
+          id: measureid,
+          index: measureIndex,
+        },
+      },
     });
 
-    // Load staves
-    return sheet.staves.map((staff, staffIndex) => {
-      const staffid = staffID(sheetid, staffIndex);
+    // Load voices
+    return measure.voices.map((voice, voiceIndex) => {
+      const voiceid = voiceID(measureid, voiceIndex);
       dispatch({
-        type: LOAD_STAVE,
+        type: LOAD_VOICE,
         data: {
-          [staffid]: {
-            ...staff,
-            id: staffid,
-            sheetID: sheetid,
-            index: staffIndex,
+          [voiceid]: {
+            ...voice,
+            id: voiceid,
+            measureID: measureid,
+            index: voiceIndex,
           },
         },
       });
 
-      // Load measures
-      return staff.measures.map((measure, measureIndex) => {
-        const measureid = measureID(staffid, measureIndex);
-        dispatch({
-          type: LOAD_MEASURE,
+      // Load notes
+      return voice.notes.map((note, noteIndex) => {
+        const noteid = noteID(voiceid, noteIndex);
+        return dispatch({
+          type: LOAD_NOTE,
           data: {
-            [measureid]: {
-              ...measure,
-              id: measureid,
-              staffID: staffid,
-              index: measureIndex,
+            [noteid]: {
+              ...note,
+              id: noteid,
+              voiceID: voiceid,
+              index: noteIndex,
             },
           },
-        });
-
-        // Load voices
-        return measure.voices.map((voice, voiceIndex) => {
-          const voiceid = voiceID(measureid, voiceIndex);
-          dispatch({
-            type: LOAD_VOICE,
-            data: {
-              [voiceid]: {
-                ...voice,
-                id: voiceid,
-                measureID: measureid,
-                index: voiceIndex,
-              },
-            },
-          });
-
-          // Load notes
-          return voice.notes.map((note, noteIndex) => {
-            const noteid = noteID(voiceid, noteIndex);
-            return dispatch({
-              type: LOAD_NOTE,
-              data: {
-                [noteid]: {
-                  ...note,
-                  id: noteid,
-                  voiceID: voiceid,
-                  index: noteIndex,
-                },
-              },
-            });
-          });
         });
       });
     });

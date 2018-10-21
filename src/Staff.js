@@ -9,36 +9,6 @@ import {
   makeGetVoicesForMeasure,
 } from './selectors/score';
 
-const voicesFromMeasure = measure => {
-  const voiceIDToVFVoice = {};
-  const vfVoices = measure.voices.map(voice => {
-    const v = new Vex.Flow.Voice({
-      clef: 'treble',
-      num_beats: voice.numBeats,
-      beat_value: voice.beatValue,
-    });
-    voiceIDToVFVoice[voice.id] = v;
-
-    const vfNotes = voice.notes.sort((a, b) => a.index - b.index).map(note => {
-      const n = new Vex.Flow.StaveNote({
-        clef: 'treble',
-        keys: note.keys,
-        duration: note.duration,
-      });
-      if (note.selected) {
-        n.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
-      } else {
-        n.setStyle({ fillStyle: 'black', strokeStyle: 'black' });
-      }
-      return n;
-    });
-
-    v.addTickables(vfNotes);
-    return v;
-  });
-  return voiceIDToVFVoice;
-};
-
 class Staff extends PureComponent {
   render() {
     const {

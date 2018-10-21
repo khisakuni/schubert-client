@@ -32,7 +32,6 @@ class Sheet extends PureComponent {
 
   render() {
     const { staves, height, width, onNoteClick, id } = this.props;
-    console.log('width >>>', width);
 
     return (
       <div ref={this.ref}>
