@@ -10,9 +10,6 @@ class Context extends React.PureComponent {
 
   componentDidMount() {
     const { height, width } = this.props;
-
-    console.log('>>>', this.ref.current);
-
     const renderer = new Vex.Flow.Renderer(
       this.ref.current,
       Vex.Flow.Renderer.Backends.SVG
