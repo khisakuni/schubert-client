@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import Context from '../Context';
 import Score from '../Score';
 import DurationSelector from './DurationSelector';
 import NoteSelector from './NoteSelector';
@@ -125,7 +126,12 @@ class Editor extends PureComponent {
           </div>
         )}
 
-        <Score onNoteClick={this.props.selectNote} width={800} height={800} />
+        <Context
+          component={Score}
+          onNoteClick={this.props.selectNote}
+          width={800}
+          height={800}
+        />
       </div>
     );
   }

@@ -37,39 +37,22 @@ const voicesFromMeasure = measure => {
 };
 
 class Score extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.ref = React.createRef();
-    this.state = { context: null };
-  }
-
-  componentDidMount() {
-    const { height, width } = this.props;
-
-    console.log('>>>', this.ref.current);
-
-    const renderer = new Vex.Flow.Renderer(
-      this.ref.current,
-      Vex.Flow.Renderer.Backends.SVG
-    );
-    renderer.resize(width, height);
-    const context = renderer.getContext();
-    const { svg } = context;
-    svg.style.pointerEvents = 'bounding-box';
-    /* eslint-disable */
-    this.setState({ context });
-    /* eslint-enable */
-  }
-
   render() {
-    const { measures, height, index, width, onNoteClick, id } = this.props;
-    const { context } = this.state;
+    const {
+      context,
+      measures,
+      height,
+      index,
+      width,
+      onNoteClick,
+      id,
+    } = this.props;
 
     let rowWidth = 0;
     const measureHeight = 80;
     let staffCount = 1;
     return (
-      <div ref={this.ref}>
+      <div>
         {measures.map((measure, measureIndex) => {
           let measureWidth = width / measures.length;
           let x = rowWidth;
@@ -128,7 +111,6 @@ class Score extends PureComponent {
 const makeMapStateToProps = () => {
   const getVoicesForMeasure = makeGetVoicesForMeasure();
   return (state, props) => {
-    console.log('state ..', Object.values(state.score.measures));
     return {
       measures: Object.values(state.score.measures).map(measure => ({
         ...measure,
