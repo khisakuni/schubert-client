@@ -125,7 +125,7 @@ class Editor extends PureComponent {
           </div>
         )}
 
-        <Score onNoteClick={this.props.selectNote} />
+        <Score onNoteClick={this.props.selectNote} width={800} height={800} />
       </div>
     );
   }

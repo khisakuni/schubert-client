@@ -14,6 +14,10 @@ class Measure extends PureComponent {
   render() {
     const { context, onNoteClick, notes, m, vfVoices } = this.props;
 
+    if (!context) {
+      return <div />;
+    }
+
     if (this.group) {
       context.svg.removeChild(this.group);
     }

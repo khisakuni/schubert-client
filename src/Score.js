@@ -65,14 +65,9 @@ class Score extends PureComponent {
     const { measures, height, index, width, onNoteClick, id } = this.props;
     const { context } = this.state;
 
-    if (!context) {
-      return <div />;
-    }
-
     let rowWidth = 0;
     const measureHeight = 80;
     let staffCount = 1;
-    console.log('measures >>>>', measures);
     return (
       <div ref={this.ref}>
         {measures.map((measure, measureIndex) => {
