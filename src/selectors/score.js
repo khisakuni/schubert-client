@@ -32,3 +32,7 @@ export const makeGetVoicesForMeasure = () =>
 export const getSelectedNote = createSelector([getNotes], notes =>
   find(notes, note => note.selected)
 );
+
+export const getSelectedMeasure = createSelector([getMeasures], measures =>
+  find(measures, measure => measure.selected)
+);

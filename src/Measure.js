@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { makeGetVoicesForMeasure } from './selectors/score';
+import { makeGetVoicesForMeasure, getSelectedMeasure } from './selectors/score';
 import { noteID } from './actions/score';
 
 class Measure extends PureComponent {
@@ -12,7 +12,16 @@ class Measure extends PureComponent {
   }
 
   render() {
-    const { context, onNoteClick, notes, m, vfVoices } = this.props;
+    const {
+      context,
+      onNoteClick,
+      onMeasureClick,
+      notes,
+      m,
+      vfVoices,
+      id,
+      selectedMeasure,
+    } = this.props;
 
     if (!context) {
       return <div />;
@@ -23,6 +32,12 @@ class Measure extends PureComponent {
     }
     this.group = context.openGroup();
 
+    if (selectedMeasure && id === selectedMeasure.id) {
+      m.options.fill_style = 'red';
+    }
+
+    this.group.onclick = () => onMeasureClick({ id });
+
     m.setContext(context).draw();
 
     Object.keys(vfVoices).forEach(id => {
@@ -30,8 +45,9 @@ class Measure extends PureComponent {
       voice.draw(context, m);
 
       voice.tickables.forEach((t, i) => {
-        t.attrs.el.onclick = () => {
+        t.attrs.el.onclick = e => {
           onNoteClick(notes[noteID(id, i)]);
+          e.stopPropagation();
         };
       });
     });
@@ -57,6 +73,7 @@ const makeMapStateToProps = () => {
   return (state, props) => ({
     voices: getVoicesForMeasure(state, props),
     notes: state.score.notes,
+    selectedMeasure: getSelectedMeasure(state),
   });
 };
 

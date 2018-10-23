@@ -45,6 +45,7 @@ class Score extends PureComponent {
       index,
       width,
       onNoteClick,
+      onMeasureClick,
       id,
     } = this.props;
 
@@ -95,8 +96,9 @@ class Score extends PureComponent {
             <Measure
               key={measureIndex}
               context={context}
-              id={measureID(id, measureIndex)}
+              id={measureID(measureIndex)}
               onNoteClick={onNoteClick}
+              onMeasureClick={onMeasureClick}
               m={m}
               vfVoices={voiceIDToVFVoice}
             />

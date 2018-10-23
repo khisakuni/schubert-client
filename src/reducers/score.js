@@ -1,11 +1,10 @@
 import { values, omit } from 'lodash';
 import {
-  LOAD_SHEET,
-  LOAD_STAVE,
   LOAD_MEASURE,
   LOAD_VOICE,
   LOAD_NOTE,
   SELECT_NOTE,
+  SELECT_MEASURE,
   CHANGE_KEY,
   CHANGE_DURATION,
   noteID,
@@ -30,10 +29,6 @@ const initialState = {
 
 const reducer = (state = initialState, { type, data }) => {
   switch (type) {
-    case LOAD_SHEET:
-      return { ...state, sheets: { ...state.sheets, ...data } };
-    case LOAD_STAVE:
-      return { ...state, staves: { ...state.staves, ...data } };
     case LOAD_MEASURE:
       return { ...state, measures: { ...state.measures, ...data } };
     case LOAD_VOICE:
@@ -49,6 +44,20 @@ const reducer = (state = initialState, { type, data }) => {
             {}
           ),
           [data.id]: { ...state.notes[data.id], selected: true },
+        },
+      };
+    case SELECT_MEASURE:
+      return {
+        ...state,
+        measures: {
+          ...Object.keys(state.measures).reduce(
+            (a, e) => ({
+              ...a,
+              [e]: { ...state.measures[e], selected: false },
+            }),
+            {}
+          ),
+          [data.id]: { ...state.measures[data.id], selected: true },
         },
       };
     case CHANGE_KEY:

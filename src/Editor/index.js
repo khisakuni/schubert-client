@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import Context from '../Context';
 import Score from '../Score';
 import DurationSelector from './DurationSelector';
+import MeasureControl from './MeasureControl';
 import NoteSelector from './NoteSelector';
-import { load, selectNote } from '../actions/score';
+import { load, selectNote, selectMeasure } from '../actions/score';
 import { getSelectedNote } from '../selectors/score';
 
 const data = {
@@ -125,10 +126,12 @@ class Editor extends PureComponent {
             <DurationSelector />
           </div>
         )}
+        <MeasureControl />
 
         <Context
           component={Score}
           onNoteClick={this.props.selectNote}
+          onMeasureClick={this.props.selectMeasure}
           width={800}
           height={800}
         />
@@ -154,6 +157,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   load: score => dispatch(load(score)),
   selectNote: ({ id }) => dispatch(selectNote(id)),
+  selectMeasure: ({ id }) => dispatch(selectMeasure(id)),
 });
 
 export default connect(
