@@ -21,10 +21,11 @@ export const changeDuration = (id, duration) => ({
   data: { id, duration },
 });
 
-export const load = ({ measures }) => dispatch =>
+export const load = ({ measures }) => (dispatch, getState) => {
+  const index = Object.keys(getState().score.measures).length;
   // Load measures
-  measures.map((measure, measureIndex) => {
-    const measureid = measureID(measureIndex);
+  return measures.map((measure, measureIndex) => {
+    const measureid = measureID(index + measureIndex);
     dispatch({
       type: LOAD_MEASURE,
       data: {
@@ -68,3 +69,4 @@ export const load = ({ measures }) => dispatch =>
       });
     });
   });
+};
