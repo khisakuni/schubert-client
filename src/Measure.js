@@ -59,13 +59,13 @@ class Measure extends PureComponent {
 }
 
 Measure.propTypes = {
-  voices: PropTypes.shape(),
+  voices: PropTypes.array,
   width: PropTypes.number,
   x: PropTypes.number,
   y: PropTypes.number,
   context: PropTypes.shape(),
   onNoteClick: PropTypes.func,
-  notes: PropTypes.arrayOf(PropTypes.shape()),
+  notes: PropTypes.shape(),
 };
 
 const makeMapStateToProps = () => {

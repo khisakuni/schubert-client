@@ -1,4 +1,4 @@
-import { values, omit } from 'lodash';
+import { values, omit, takeWhile } from 'lodash';
 import {
   LOAD_MEASURE,
   LOAD_VOICE,
@@ -80,10 +80,15 @@ const reducer = (state = initialState, { type, data }) => {
         .sort((a, b) => a.index - b.index);
 
       if (toDuration > fromDuration) {
-        const toDelete = voiceNotes.slice(
-          note.index + 1,
-          note.index + (fromDuration / toDuration) * voice.numBeats
-        );
+        let total = 0;
+        let count = 0;
+        takeWhile(voiceNotes, n => {
+          total += durationToRatio[n.duration];
+          count++;
+          return total < toDuration;
+        });
+
+        const toDelete = voiceNotes.slice(note.index + 1, count);
 
         const updatedNotes = omit(notes, toDelete.map(n => n.id));
         updatedNotes[id] = { ...updatedNotes[id], duration };
@@ -99,6 +104,8 @@ const reducer = (state = initialState, { type, data }) => {
             };
             return a;
           }, {});
+
+        console.log('notes >>', updatedVoiceNotes);
 
         const other = values(updatedNotes)
           .filter(n => n.voiceID !== voice.id)
