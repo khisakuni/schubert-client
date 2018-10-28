@@ -1,13 +1,6 @@
 import { createSelector } from 'reselect';
 import { values, find } from 'lodash';
 
-const getStaves = state => (state || { score: { staves: {} } }).score.staves;
-const getSheetID = (_, props = {}) => props.id;
-export const makeGetStavesForSheet = () =>
-  createSelector([getStaves, getSheetID], (staves, sheetID) =>
-    values(staves).filter(staff => staff.sheetID === sheetID)
-  );
-
 const getMeasures = state =>
   (state || { score: { measures: {} } }).score.measures;
 const getStaffID = (_, props = {}) => props.id;

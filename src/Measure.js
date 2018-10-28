@@ -11,6 +11,10 @@ class Measure extends PureComponent {
     this.group = null;
   }
 
+  componentWillUnmount() {
+    this.group.remove();
+  }
+
   render() {
     const {
       context,

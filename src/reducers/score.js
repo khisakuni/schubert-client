@@ -7,6 +7,7 @@ import {
   SELECT_MEASURE,
   CHANGE_KEY,
   CHANGE_DURATION,
+  REMOVE_MEASURE,
   noteID,
 } from '../actions/score';
 
@@ -146,6 +147,32 @@ const reducer = (state = initialState, { type, data }) => {
             return a;
           }, {}),
           [data.id]: { ...state.notes[id], duration },
+        },
+      };
+    }
+    case REMOVE_MEASURE: {
+      //const measure = state.measures[data.id];
+      // const voices = measure.voices;
+      return {
+        ...state,
+        measures: {
+          ...omit(state.measures, data.id),
+        },
+        voices: {
+          ...omit(
+            state.voices,
+            values(state.voices)
+              .filter(({ measureID }) => measureID === data.id)
+              .map(({ id }) => id)
+          ),
+        },
+        notes: {
+          ...omit(
+            state.notes,
+            values(state.notes)
+              .filter(({ measureID }) => measureID === data.id)
+              .map(({ id }) => id)
+          ),
         },
       };
     }

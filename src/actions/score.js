@@ -5,6 +5,7 @@ export const SELECT_NOTE = 'SELECT_NOTE';
 export const SELECT_MEASURE = 'SELECT_MEASURE';
 export const CHANGE_KEY = 'CHANGE_KEY';
 export const CHANGE_DURATION = 'CHANGE_DURATION';
+export const REMOVE_MEASURE = 'REMOVE_MEASURE';
 
 export const measureID = index => `measure${index}`;
 export const voiceID = (measureid, index) => `${measureid}-voice${index}`;
@@ -61,6 +62,7 @@ export const load = ({ measures }) => (dispatch, getState) => {
             [noteid]: {
               ...note,
               id: noteid,
+              measureID: measureid,
               voiceID: voiceid,
               index: noteIndex,
             },
@@ -70,3 +72,10 @@ export const load = ({ measures }) => (dispatch, getState) => {
     });
   });
 };
+
+export const removeMeasure = ({ id }) => ({
+  type: REMOVE_MEASURE,
+  data: {
+    id,
+  },
+});
