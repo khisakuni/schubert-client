@@ -89,6 +89,14 @@ const reducer = (state = initialState, { type, data }) => {
         const updatedNotes = omit(notes, toDelete.map(n => n.id));
         updatedNotes[id] = { ...updatedNotes[id], duration };
 
+        // If total duration doesn't add up to 1, it's invalid.
+        const totalDuration = values(updatedNotes)
+          .filter(n => n.voiceID === voice.id)
+          .reduce((a, e) => (a += durationToRatio[e.duration]), 0);
+        if (totalDuration !== 1) {
+          return state;
+        }
+
         const updatedVoiceNotes = values(updatedNotes)
           .filter(n => n.voiceID === voice.id)
           .sort((a, b) => a.index - b.index)
