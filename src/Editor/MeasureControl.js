@@ -4,12 +4,6 @@ import { connect } from 'react-redux';
 import { load, removeMeasure } from '../actions/score';
 import { getSelectedMeasure } from '../selectors/score';
 
-/*
- * TODO:
- * - Add measure
- * - Delete measure
- *
- */
 const MeasureControl = ({ load, selectedMeasure, remove }) => {
   const measure = {
     voices: [
