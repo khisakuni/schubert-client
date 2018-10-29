@@ -45,6 +45,8 @@ const MeasureControl = ({ load, selectedMeasure, remove, update }) => {
       },
     ],
   };
+
+  const timeSignature = (selectedMeasure || {}).timeSignature || {};
   return (
     <div>
       <button onClick={() => load(measure)}>Add Measure</button>
@@ -64,6 +66,44 @@ const MeasureControl = ({ load, selectedMeasure, remove, update }) => {
               </option>
             ))}
           </select>
+
+          <div>
+            <label>
+              Beats
+              {/* TODO: This should grab value of measure before it. */}
+              <input
+                type="number"
+                value={timeSignature.numBeats || 4}
+                onChange={e =>
+                  update({
+                    ...selectedMeasure,
+                    timeSignature: {
+                      ...timeSignature,
+                      numBeats: e.target.value,
+                    },
+                  })
+                }
+              />
+            </label>
+
+            <label>
+              Beat value
+              {/* TODO: This should grab value of measure before it. */}
+              <input
+                type="number"
+                value={timeSignature.beatValue || 4}
+                onChange={e =>
+                  update({
+                    ...selectedMeasure,
+                    timeSignature: {
+                      ...timeSignature,
+                      beatValue: e.target.value,
+                    },
+                  })
+                }
+              />
+            </label>
+          </div>
         </div>
       )}
     </div>

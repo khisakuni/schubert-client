@@ -37,6 +37,12 @@ class Measure extends PureComponent {
       m.addClef(clef);
     }
 
+    if (timeSignature) {
+      m.addTimeSignature(
+        `${timeSignature.numBeats}/${timeSignature.beatValue}`
+      );
+    }
+
     if (this.group) {
       context.svg.removeChild(this.group);
     }

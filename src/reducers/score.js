@@ -12,7 +12,8 @@ import {
   noteID,
 } from '../actions/score';
 
-const durationToRatio = {
+// TODO: Put this somewhere else.
+export const durationToRatio = {
   w: 1,
   h: 0.5,
   q: 0.25,
