@@ -83,7 +83,6 @@ class Score extends PureComponent {
           let minWidth = Math.max(formatter.getMinTotalWidth() + 100, 200);
 
           if (minWidth > measureWidth) {
-            console.log('>>>> 1', measure.id);
             measureWidth = minWidth;
             voiceIDToVFVoice = voicesFromMeasure(measure);
             vfVoices = Object.values(voiceIDToVFVoice);
@@ -97,7 +96,6 @@ class Score extends PureComponent {
           rowWidth += measureWidth;
 
           if (rowWidth > width) {
-            console.log('>>>> 2', measure.id);
             staffCount++;
             y = measureHeight * staffCount;
             x = 0;
@@ -108,8 +106,6 @@ class Score extends PureComponent {
               .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
             rowWidth = measureWidth;
           }
-
-          console.log('>>>>>>>', measure.id, m.getNoteStartX(), x);
 
           return (
             <Measure
