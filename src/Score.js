@@ -1,22 +1,34 @@
 import React, { PureComponent } from 'react';
 import Vex from 'vexflow';
 import { connect } from 'react-redux';
+import { takeWhile } from 'lodash';
 
 import Measure from './Measure';
 import { measureID } from './actions/score';
 import { makeGetVoicesForMeasure } from './selectors/score';
+import { durationToRatio } from './reducers/score';
 
 const voicesFromMeasure = measure => {
   const voiceIDToVFVoice = {};
+  const timeSignature = measure.timeSignature || {
+    numBeats: 4,
+    beatValue: 'q',
+  };
   const vfVoices = measure.voices.map(voice => {
     const v = new Vex.Flow.Voice({
       clef: 'treble',
-      num_beats: voice.numBeats,
-      beat_value: voice.beatValue,
+      num_beats: timeSignature.numBeats,
+      beat_value: 1 / durationToRatio[timeSignature.beatValue],
     });
     voiceIDToVFVoice[voice.id] = v;
 
-    const vfNotes = voice.notes.sort((a, b) => a.index - b.index).map(note => {
+    let total = 0;
+    const allowed =
+      timeSignature.numBeats * durationToRatio[timeSignature.beatValue];
+    const vfNotes = takeWhile(
+      voice.notes.sort((a, b) => a.index - b.index),
+      n => (total += durationToRatio[n.duration]) <= allowed
+    ).map(note => {
       const n = new Vex.Flow.StaveNote({
         clef: 'treble',
         keys: note.keys,
@@ -43,9 +55,11 @@ const vfMeasure = (measure, x, y, width) => {
     m.addClef(measure.clef);
   }
 
-  if (measure.timeSignature) {
+  const timeSignature = measure.timeSignature || {};
+  if (timeSignature.numBeats && timeSignature.beatValue) {
     m.addTimeSignature(
-      `${measure.timeSignature.numBeats}/${measure.timeSignature.beatValue}`
+      `${timeSignature.numBeats}/${1 /
+        durationToRatio[timeSignature.beatValue]}`
     );
   }
   return m;

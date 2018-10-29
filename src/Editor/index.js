@@ -18,7 +18,7 @@ const data = {
       clef: 'treble',
       timeSignature: {
         numBeats: 4,
-        beatValue: 4,
+        beatValue: 'q',
       },
       voices: [
         {

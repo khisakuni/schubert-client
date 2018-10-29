@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { load, removeMeasure, updateMeasure } from '../actions/score';
 import { getSelectedMeasure } from '../selectors/score';
+import { durationToRatio } from '../reducers/score';
 
 const clefOptions = [
   'treble',
@@ -89,9 +90,8 @@ const MeasureControl = ({ load, selectedMeasure, remove, update }) => {
             <label>
               Beat value
               {/* TODO: This should grab value of measure before it. */}
-              <input
-                type="number"
-                value={timeSignature.beatValue || 4}
+              <select
+                value={timeSignature.beatValue}
                 onChange={e =>
                   update({
                     ...selectedMeasure,
@@ -101,7 +101,13 @@ const MeasureControl = ({ load, selectedMeasure, remove, update }) => {
                     },
                   })
                 }
-              />
+              >
+                {Object.keys(durationToRatio).map(duration => (
+                  <option key={duration} value={duration}>
+                    {1 / durationToRatio[duration]}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         </div>
