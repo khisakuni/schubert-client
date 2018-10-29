@@ -94,6 +94,8 @@ class Score extends PureComponent {
 
           return (
             <Measure
+              clef={measure.clef}
+              timeSignature={measure.timeSignature}
               key={measureIndex}
               context={context}
               id={measureID(measureIndex)}

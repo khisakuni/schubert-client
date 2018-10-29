@@ -6,6 +6,7 @@ export const SELECT_MEASURE = 'SELECT_MEASURE';
 export const CHANGE_KEY = 'CHANGE_KEY';
 export const CHANGE_DURATION = 'CHANGE_DURATION';
 export const REMOVE_MEASURE = 'REMOVE_MEASURE';
+export const UPDATE_MEASURE = 'UPDATE_MEASURE';
 
 export const measureID = index => `measure${index}`;
 export const voiceID = (measureid, index) => `${measureid}-voice${index}`;
@@ -78,4 +79,9 @@ export const removeMeasure = ({ id }) => ({
   data: {
     id,
   },
+});
+
+export const updateMeasure = measure => ({
+  type: UPDATE_MEASURE,
+  data: measure,
 });

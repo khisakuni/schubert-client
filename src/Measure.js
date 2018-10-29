@@ -25,10 +25,16 @@ class Measure extends PureComponent {
       vfVoices,
       id,
       selectedMeasure,
+      clef,
+      timeSignature,
     } = this.props;
 
     if (!context) {
       return <div />;
+    }
+
+    if (clef) {
+      m.addClef(clef);
     }
 
     if (this.group) {

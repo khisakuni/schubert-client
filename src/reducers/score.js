@@ -8,6 +8,7 @@ import {
   CHANGE_KEY,
   CHANGE_DURATION,
   REMOVE_MEASURE,
+  UPDATE_MEASURE,
   noteID,
 } from '../actions/score';
 
@@ -173,6 +174,15 @@ const reducer = (state = initialState, { type, data }) => {
               .filter(({ measureID }) => measureID === data.id)
               .map(({ id }) => id)
           ),
+        },
+      };
+    }
+    case UPDATE_MEASURE: {
+      return {
+        ...state,
+        measures: {
+          ...state.measures,
+          [data.id]: { ...state.measures[data.id], ...data },
         },
       };
     }

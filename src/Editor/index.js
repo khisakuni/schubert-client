@@ -15,8 +15,11 @@ const data = {
   width: 800,
   measures: [
     {
-      clefs: [],
-      timeSignatures: [],
+      clef: 'treble',
+      timeSignature: {
+        beats: 4,
+        beatType: 'q',
+      },
       voices: [
         {
           numBeats: 4,
@@ -43,8 +46,6 @@ const data = {
       ],
     },
     {
-      clefs: [],
-      timeSignatures: [],
       voices: [
         {
           numBeats: 4,
@@ -71,8 +72,6 @@ const data = {
       ],
     },
     {
-      clefs: [],
-      timeSignatures: [],
       voices: [
         {
           numBeats: 4,
