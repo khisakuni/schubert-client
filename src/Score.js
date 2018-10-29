@@ -36,17 +36,29 @@ const voicesFromMeasure = measure => {
   return voiceIDToVFVoice;
 };
 
+const vfMeasure = (measure, x, y, width) => {
+  const m = new Vex.Flow.Stave(x, y, width);
+
+  if (measure.clef) {
+    m.addClef(measure.clef);
+  }
+
+  if (measure.timeSignature) {
+    m.addTimeSignature(
+      `${measure.timeSignature.numBeats}/${measure.timeSignature.beatValue}`
+    );
+  }
+  return m;
+};
+
 class Score extends PureComponent {
   render() {
     const {
       context,
       measures,
-      height,
-      index,
       width,
       onNoteClick,
       onMeasureClick,
-      id,
     } = this.props;
 
     let rowWidth = 0;
@@ -58,44 +70,49 @@ class Score extends PureComponent {
           let measureWidth = width / measures.length;
           let x = rowWidth;
           let y = measureHeight * staffCount;
-          let m = new Vex.Flow.Stave(x, y, measureWidth);
-
-          const startX = m.getNoteStartX();
+          let m = vfMeasure(measure, x, y, measureWidth);
 
           let voiceIDToVFVoice = voicesFromMeasure(measure);
           let vfVoices = Object.values(voiceIDToVFVoice);
 
+          vfVoices.forEach(v => v.setStave(m));
+
           const formatter = new Vex.Flow.Formatter()
             .joinVoices(vfVoices)
-            .formatToStave(vfVoices, m);
-          const minWidth = formatter.getMinTotalWidth();
+            .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
+          let minWidth = Math.max(formatter.getMinTotalWidth() + 100, 200);
 
           if (minWidth > measureWidth) {
+            console.log('>>>> 1', measure.id);
             measureWidth = minWidth;
             voiceIDToVFVoice = voicesFromMeasure(measure);
             vfVoices = Object.values(voiceIDToVFVoice);
-            m = new Vex.Flow.Stave(x, y, measureWidth);
+            m = vfMeasure(measure, x, y, measureWidth);
+            vfVoices.forEach(v => v.setStave(m));
             new Vex.Flow.Formatter()
               .joinVoices(vfVoices)
-              .formatToStave(vfVoices, m);
+              .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
           }
 
           rowWidth += measureWidth;
 
           if (rowWidth > width) {
+            console.log('>>>> 2', measure.id);
             staffCount++;
             y = measureHeight * staffCount;
             x = 0;
-
-            m = new Vex.Flow.Stave(x, y, measureWidth);
-            formatter.formatToStave(vfVoices, m);
+            m = vfMeasure(measure, x, y, measureWidth);
+            vfVoices.forEach(v => v.setStave(m));
+            new Vex.Flow.Formatter()
+              .joinVoices(vfVoices)
+              .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
             rowWidth = measureWidth;
           }
 
+          console.log('>>>>>>>', measure.id, m.getNoteStartX(), x);
+
           return (
             <Measure
-              clef={measure.clef}
-              timeSignature={measure.timeSignature}
               key={measureIndex}
               context={context}
               id={measureID(measureIndex)}
