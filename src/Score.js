@@ -78,22 +78,8 @@ const voicesFromMeasure = (measure, loadNote, removeNote) => {
   return voiceIDToVFVoice;
 };
 
-const vfMeasure = (measure, x, y, width, showClef, showTimeSignature) => {
+const vfMeasure = (measure, x, y, width) => {
   const m = new Vex.Flow.Stave(x, y, width);
-
-  // if (showClef) {
-  //   console.log('CLEF >>>>>', measure.clef)
-  //   m.addClef(measure.clef);
-  // }
-
-  if (showTimeSignature) {
-    const timeSignature = measure.timeSignature || {};
-    m.addTimeSignature(
-      `${timeSignature.numBeats}/${1 /
-        durationToRatio[timeSignature.beatValue]}`
-    );
-  }
-
   return m;
 };
 
@@ -115,22 +101,11 @@ class Score extends PureComponent {
     return (
       <div>
         {measures.map((measure, mindex) => {
-          console.log('mindex >>', mindex);
           let measureWidth = width / measures.length;
           let x = rowWidth;
           let y = measureHeight * staffCount;
           const prev = measures[mindex - 1];
-          if (mindex === 0) {
-            console.log('>>>', showClef);
-          }
-          let m = vfMeasure(
-            measure,
-            x,
-            y,
-            measureWidth,
-            showClef,
-            showTimeSignature
-          );
+          let m = vfMeasure(measure, x, y, measureWidth);
 
           // Shouldn't be loadNote or removeNote in render function.
           let voiceIDToVFVoice = voicesFromMeasure(
@@ -141,8 +116,6 @@ class Score extends PureComponent {
 
           let vfVoices = Object.values(voiceIDToVFVoice);
 
-          // vfVoices.forEach(v => v.setStave(m));
-
           const formatter = new Vex.Flow.Formatter()
             .joinVoices(vfVoices)
             .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
@@ -151,10 +124,6 @@ class Score extends PureComponent {
           if (minWidth > measureWidth) {
             measureWidth = minWidth;
             m = vfMeasure(measure, x, y, measureWidth);
-            // vfVoices.forEach(v => v.setStave(m));
-            // new Vex.Flow.Formatter()
-            //   .joinVoices(vfVoices)
-            //   .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
           }
 
           rowWidth += measureWidth;
@@ -164,10 +133,6 @@ class Score extends PureComponent {
             y = measureHeight * staffCount;
             x = 0;
             m = vfMeasure(measure, x, y, measureWidth);
-            // vfVoices.forEach(v => v.setStave(m));
-            // new Vex.Flow.Formatter()
-            //   .joinVoices(vfVoices)
-            //   .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
             rowWidth = measureWidth;
           }
 
