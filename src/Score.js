@@ -8,12 +8,9 @@ import { measureID, loadNote, noteID, removeNote } from './actions/score';
 import { makeGetVoicesForMeasure } from './selectors/score';
 import { durationToRatio } from './reducers/score';
 
-const voicesFromMeasure = (measure, loadNote, removeNote) => {
+const voicesFromMeasure = measure => {
   const voiceIDToVFVoice = {};
-  const timeSignature = measure.timeSignature || {
-    numBeats: 4,
-    beatValue: 'q',
-  };
+  const timeSignature = measure.timeSignature;
   const vfVoices = measure.voices.map(voice => {
     const v = new Vex.Flow.Voice({
       clef: 'treble',
@@ -84,6 +81,78 @@ const vfMeasure = (measure, x, y, width) => {
 };
 
 class Score extends PureComponent {
+  componentDidUpdate(prevProps) {
+    const { measures } = this.props;
+    console.log('component did update >>', measures);
+    // Iterate over measures.
+    //
+
+    // const voiceIDToVFVoice = {};
+    // const timeSignature = measure.timeSignature
+    // const vfVoices = measure.voices.map(voice => {
+    //   const v = new Vex.Flow.Voice({
+    //     clef: 'treble',
+    //     num_beats: timeSignature.numBeats,
+    //     beat_value: 1 / durationToRatio[timeSignature.beatValue],
+    //   });
+    //   voiceIDToVFVoice[voice.id] = v;
+
+    //   const allowed =
+    //     timeSignature.numBeats * durationToRatio[timeSignature.beatValue || 'q'];
+    //   const notes = voice.notes.sort((a, b) => a.index - b.index);
+    //   //console.log('notes >>', notes)
+    //   const total = notes.reduce((total, note) => {
+    //     return (total += durationToRatio[note.duration]);
+    //   }, 0);
+
+    //   //console.log('allowed >>', total, allowed)
+
+    //   let vfNotes = [];
+    //   let t = 0;
+    //   // vfNotes = takeWhile(
+    //   //   notes,
+    //   //   n => (t += durationToRatio[n.duration]) <= allowed
+    //   // )
+    //   vfNotes = notes.map(note => {
+    //     const n = new Vex.Flow.StaveNote({
+    //       clef: measure.clef || 'treble', // TODO: Should be based on something else.
+    //       keys: note.keys,
+    //       duration: note.duration,
+    //     });
+    //     if (note.selected) {
+    //       n.setStyle({ fillStyle: 'red', strokeStyle: 'red' });
+    //     } else {
+    //       n.setStyle({ fillStyle: 'black', strokeStyle: 'black' });
+    //     }
+    //     return n;
+    //   });
+
+    //   //console.log('>>>>>>>>')
+    //   // TODO: Delete old ones.
+    //   // notes.slice(vfNotes.length).forEach(n => removeNote(n))
+
+    //   // Need to add more notes.
+    //   // if (total < allowed) {
+    //   //   const blankNotesCount = (allowed - total) / durationToRatio[timeSignature.beatValue]
+    //   //   for (let i = 0; i < blankNotesCount; i++) {
+    //   //     // Load notes
+    //   //     loadNote({
+    //   //       duration: timeSignature.beatValue,
+    //   //       keys: ['c/4'],
+    //   //       id: noteID(voice.id, vfNotes.length),
+    //   //       measureID: measure.id,
+    //   //       voiceID: voice.id,
+    //   //       index: vfNotes.length,
+    //   //     });
+    //   //   }
+    //   // }
+
+    //   v.addTickables(vfNotes);
+    //   return v;
+    // });
+    // return voiceIDToVFVoice;
+  }
+
   render() {
     const {
       context,
@@ -108,11 +177,7 @@ class Score extends PureComponent {
           let m = vfMeasure(measure, x, y, measureWidth);
 
           // Shouldn't be loadNote or removeNote in render function.
-          let voiceIDToVFVoice = voicesFromMeasure(
-            measure,
-            loadNote,
-            removeNote
-          );
+          let voiceIDToVFVoice = voicesFromMeasure(measure);
 
           let vfVoices = Object.values(voiceIDToVFVoice);
 

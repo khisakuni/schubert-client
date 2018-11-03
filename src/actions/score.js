@@ -1,3 +1,5 @@
+import { durationToRatio } from '../reducers/score';
+
 export const LOAD_MEASURE = 'LOAD_MEASURE';
 export const LOAD_VOICE = 'LOAD_VOICE';
 export const LOAD_NOTE = 'LOAD_NOTE';
@@ -80,10 +82,46 @@ export const removeMeasure = ({ id }) => ({
   data: { id },
 });
 
-export const updateMeasure = measure => ({
-  type: UPDATE_MEASURE,
-  data: measure,
-});
+export const updateMeasure = measure => (dispatch, getState) => {
+  const timeSignature = measure.timeSignature;
+  const state = getState();
+  console.log('STATE >>>', state);
+  const notes = Object.values(state.score.notes)
+    .filter(n => n.measureID === measure.id)
+    .sort((a, b) => a.index - b.index);
+  const allowed =
+    timeSignature.numBeats * durationToRatio[timeSignature.beatValue];
+  const total = notes.reduce(
+    (total, note) => (total += durationToRatio[note.duration]),
+    0
+  );
+  if (total < allowed) {
+    // Need to add more notes
+    console.log('Add more notes');
+  } else {
+    // Need to delete notes
+    console.log('Delete some notes');
+    const res = notes.reduce(
+      ({ count, remove }, n) => {
+        count += durationToRatio[n.duration];
+        if (count > allowed) {
+          remove = remove.concat(n);
+        }
+        return { count, remove };
+      },
+      { count: 0, remove: [] }
+    );
+
+    res.remove.map(({ id }) => dispatch(removeNote({ id })));
+  }
+
+  dispatch({ type: UPDATE_MEASURE, data: measure });
+};
+
+// ({
+//   type: UPDATE_MEASURE,
+//   data: measure,
+// });
 
 export const loadNote = note => ({
   type: LOAD_NOTE,

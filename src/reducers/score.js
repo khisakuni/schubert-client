@@ -186,8 +186,6 @@ const reducer = (state = initialState, { type, data }) => {
       };
     }
     case UPDATE_MEASURE: {
-      console.log('>>>>', { ...state.measures[data.id], ...data });
-
       return {
         ...state,
         measures: {
