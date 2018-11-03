@@ -46,6 +46,11 @@ const data = {
       ],
     },
     {
+      clef: 'treble',
+      timeSignature: {
+        numBeats: 4,
+        beatValue: 'q',
+      },
       voices: [
         {
           numBeats: 4,
@@ -72,6 +77,11 @@ const data = {
       ],
     },
     {
+      clef: 'treble',
+      timeSignature: {
+        numBeats: 4,
+        beatValue: 'q',
+      },
       voices: [
         {
           numBeats: 4,

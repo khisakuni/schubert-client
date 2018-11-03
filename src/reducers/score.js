@@ -8,6 +8,7 @@ import {
   CHANGE_KEY,
   CHANGE_DURATION,
   REMOVE_MEASURE,
+  REMOVE_NOTE,
   UPDATE_MEASURE,
   noteID,
 } from '../actions/score';
@@ -153,8 +154,6 @@ const reducer = (state = initialState, { type, data }) => {
       };
     }
     case REMOVE_MEASURE: {
-      //const measure = state.measures[data.id];
-      // const voices = measure.voices;
       return {
         ...state,
         measures: {
@@ -178,7 +177,17 @@ const reducer = (state = initialState, { type, data }) => {
         },
       };
     }
+    case REMOVE_NOTE: {
+      return {
+        ...state,
+        notes: {
+          ...omit(state.notes, data.id),
+        },
+      };
+    }
     case UPDATE_MEASURE: {
+      console.log('>>>>', { ...state.measures[data.id], ...data });
+
       return {
         ...state,
         measures: {
@@ -186,6 +195,7 @@ const reducer = (state = initialState, { type, data }) => {
           [data.id]: { ...state.measures[data.id], ...data },
         },
       };
+      return state;
     }
     default:
       return state;

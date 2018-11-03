@@ -4,11 +4,12 @@ import { connect } from 'react-redux';
 import { takeWhile } from 'lodash';
 
 import Measure from './Measure';
-import { measureID } from './actions/score';
+import { measureID, loadNote, noteID, removeNote } from './actions/score';
 import { makeGetVoicesForMeasure } from './selectors/score';
 import { durationToRatio } from './reducers/score';
 
-const voicesFromMeasure = measure => {
+const voicesFromMeasure = (measure, loadNote, removeNote) => {
+  console.log('Getting here');
   const voiceIDToVFVoice = {};
   const timeSignature = measure.timeSignature || {
     numBeats: 4,
@@ -22,15 +23,25 @@ const voicesFromMeasure = measure => {
     });
     voiceIDToVFVoice[voice.id] = v;
 
-    let total = 0;
     const allowed =
-      timeSignature.numBeats * durationToRatio[timeSignature.beatValue];
-    const vfNotes = takeWhile(
-      voice.notes.sort((a, b) => a.index - b.index),
-      n => (total += durationToRatio[n.duration]) <= allowed
-    ).map(note => {
+      timeSignature.numBeats * durationToRatio[timeSignature.beatValue || 'q'];
+    const notes = voice.notes.sort((a, b) => a.index - b.index);
+    //console.log('notes >>', notes)
+    const total = notes.reduce((total, note) => {
+      return (total += durationToRatio[note.duration]);
+    }, 0);
+
+    //console.log('allowed >>', total, allowed)
+
+    let vfNotes = [];
+    let t = 0;
+    // vfNotes = takeWhile(
+    //   notes,
+    //   n => (t += durationToRatio[n.duration]) <= allowed
+    // )
+    vfNotes = notes.map(note => {
       const n = new Vex.Flow.StaveNote({
-        clef: 'treble',
+        clef: measure.clef || 'treble', // TODO: Should be based on something else.
         keys: note.keys,
         duration: note.duration,
       });
@@ -42,26 +53,47 @@ const voicesFromMeasure = measure => {
       return n;
     });
 
+    //console.log('>>>>>>>>')
+    // TODO: Delete old ones.
+    // notes.slice(vfNotes.length).forEach(n => removeNote(n))
+
+    // Need to add more notes.
+    // if (total < allowed) {
+    //   const blankNotesCount = (allowed - total) / durationToRatio[timeSignature.beatValue]
+    //   for (let i = 0; i < blankNotesCount; i++) {
+    //     // Load notes
+    //     loadNote({
+    //       duration: timeSignature.beatValue,
+    //       keys: ['c/4'],
+    //       id: noteID(voice.id, vfNotes.length),
+    //       measureID: measure.id,
+    //       voiceID: voice.id,
+    //       index: vfNotes.length,
+    //     });
+    //   }
+    // }
+
     v.addTickables(vfNotes);
     return v;
   });
   return voiceIDToVFVoice;
 };
 
-const vfMeasure = (measure, x, y, width) => {
+const vfMeasure = (measure, x, y, width, showClef, showTimeSignature) => {
   const m = new Vex.Flow.Stave(x, y, width);
 
-  if (measure.clef) {
+  if (showClef) {
     m.addClef(measure.clef);
   }
 
-  const timeSignature = measure.timeSignature || {};
-  if (timeSignature.numBeats && timeSignature.beatValue) {
+  if (showTimeSignature) {
+    const timeSignature = measure.timeSignature || {};
     m.addTimeSignature(
       `${timeSignature.numBeats}/${1 /
         durationToRatio[timeSignature.beatValue]}`
     );
   }
+
   return m;
 };
 
@@ -73,6 +105,8 @@ class Score extends PureComponent {
       width,
       onNoteClick,
       onMeasureClick,
+      loadNote,
+      removeNote,
     } = this.props;
 
     let rowWidth = 0;
@@ -80,13 +114,32 @@ class Score extends PureComponent {
     let staffCount = 1;
     return (
       <div>
-        {measures.map((measure, measureIndex) => {
+        {measures.map((measure, mindex) => {
           let measureWidth = width / measures.length;
           let x = rowWidth;
           let y = measureHeight * staffCount;
-          let m = vfMeasure(measure, x, y, measureWidth);
+          const prev = measures[mindex - 1];
+          const showClef = mindex === 0 || prev.clef !== measure.clef;
+          const showTimeSignature =
+            mindex === 0 ||
+            (prev.timeSignature.beatValue !== measure.timeSignature.beatValue &&
+              prev.timeSignature.numBeats !== measure.timeSignature.numBeats);
+          let m = vfMeasure(
+            measure,
+            x,
+            y,
+            measureWidth,
+            showClef,
+            showTimeSignature
+          );
 
-          let voiceIDToVFVoice = voicesFromMeasure(measure);
+          // Shouldn't be loadNote or removeNote in render function.
+          let voiceIDToVFVoice = voicesFromMeasure(
+            measure,
+            loadNote,
+            removeNote
+          );
+
           let vfVoices = Object.values(voiceIDToVFVoice);
 
           vfVoices.forEach(v => v.setStave(m));
@@ -98,8 +151,6 @@ class Score extends PureComponent {
 
           if (minWidth > measureWidth) {
             measureWidth = minWidth;
-            voiceIDToVFVoice = voicesFromMeasure(measure);
-            vfVoices = Object.values(voiceIDToVFVoice);
             m = vfMeasure(measure, x, y, measureWidth);
             vfVoices.forEach(v => v.setStave(m));
             new Vex.Flow.Formatter()
@@ -123,9 +174,9 @@ class Score extends PureComponent {
 
           return (
             <Measure
-              key={measureIndex}
+              key={mindex}
               context={context}
-              id={measureID(measureIndex)}
+              id={measureID(mindex)}
               onNoteClick={onNoteClick}
               onMeasureClick={onMeasureClick}
               m={m}
@@ -151,4 +202,12 @@ const makeMapStateToProps = () => {
   };
 };
 
-export default connect(makeMapStateToProps)(Score);
+const mapDispatchToProps = dispatch => ({
+  loadNote: note => dispatch(loadNote(note)),
+  removeNote: ({ id }) => dispatch(removeNote({ id })),
+});
+
+export default connect(
+  makeMapStateToProps,
+  mapDispatchToProps
+)(Score);
