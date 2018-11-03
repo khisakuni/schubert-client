@@ -204,7 +204,7 @@ class Score extends PureComponent {
           const showClef = x === 0 || prev.clef !== measure.clef;
           const showTimeSignature =
             x === 0 ||
-            (prev.timeSignature.beatValue !== measure.timeSignature.beatValue &&
+            (prev.timeSignature.beatValue !== measure.timeSignature.beatValue ||
               prev.timeSignature.numBeats !== measure.timeSignature.numBeats);
           return (
             <Measure
