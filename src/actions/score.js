@@ -118,11 +118,6 @@ export const updateMeasure = measure => (dispatch, getState) => {
   dispatch({ type: UPDATE_MEASURE, data: measure });
 };
 
-// ({
-//   type: UPDATE_MEASURE,
-//   data: measure,
-// });
-
 export const loadNote = note => ({
   type: LOAD_NOTE,
   data: { [note.id]: note },

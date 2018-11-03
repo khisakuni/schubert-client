@@ -79,15 +79,15 @@ const MeasureControl = ({ load, selectedMeasure, remove, update }) => {
               <input
                 type="number"
                 value={timeSignature.numBeats || 4}
-                onChange={e =>
+                onChange={e => {
                   update({
                     ...selectedMeasure,
                     timeSignature: {
                       ...timeSignature,
-                      numBeats: e.target.value,
+                      numBeats: parseInt(e.target.value, 10),
                     },
-                  })
-                }
+                  });
+                }}
               />
             </label>
 
