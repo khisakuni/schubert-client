@@ -21,10 +21,14 @@ const clefOptions = [
 
 const MeasureControl = ({ load, selectedMeasure, remove, update }) => {
   const measure = {
+    // TODO: Get this from selected measure.
+    clef: 'treble',
+    timeSignature: {
+      numBeats: 4,
+      beatValue: 'q',
+    },
     voices: [
       {
-        numBeats: 4,
-        beatValue: 4,
         notes: [
           {
             keys: ['c/4'],

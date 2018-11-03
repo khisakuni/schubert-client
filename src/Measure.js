@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
+import Vex from 'vexflow';
 import { connect } from 'react-redux';
+import { values } from 'lodash';
 
+import { durationToRatio } from './reducers/score';
 import { makeGetVoicesForMeasure, getSelectedMeasure } from './selectors/score';
 import { noteID } from './actions/score';
 
@@ -25,6 +28,12 @@ class Measure extends PureComponent {
       vfVoices,
       id,
       selectedMeasure,
+      clef,
+      timeSignature,
+      measure,
+      width,
+      x,
+      y,
     } = this.props;
 
     if (!context) {
@@ -39,6 +48,21 @@ class Measure extends PureComponent {
     if (selectedMeasure && id === selectedMeasure.id) {
       m.options.fill_style = 'red';
     }
+
+    if (clef) {
+      m.addClef(measure.clef);
+    }
+
+    if (timeSignature) {
+      const ts = measure.timeSignature || {};
+      m.addTimeSignature(`${ts.numBeats}/${1 / durationToRatio[ts.beatValue]}`);
+    }
+
+    const voices = values(vfVoices);
+    voices.forEach(v => v.setStave(m));
+    new Vex.Flow.Formatter()
+      .joinVoices(voices)
+      .format(voices, width - (m.getNoteStartX() - x));
 
     this.group.onclick = () => onMeasureClick({ id });
 

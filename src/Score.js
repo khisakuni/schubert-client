@@ -9,7 +9,6 @@ import { makeGetVoicesForMeasure } from './selectors/score';
 import { durationToRatio } from './reducers/score';
 
 const voicesFromMeasure = (measure, loadNote, removeNote) => {
-  console.log('Getting here');
   const voiceIDToVFVoice = {};
   const timeSignature = measure.timeSignature || {
     numBeats: 4,
@@ -82,9 +81,10 @@ const voicesFromMeasure = (measure, loadNote, removeNote) => {
 const vfMeasure = (measure, x, y, width, showClef, showTimeSignature) => {
   const m = new Vex.Flow.Stave(x, y, width);
 
-  if (showClef) {
-    m.addClef(measure.clef);
-  }
+  // if (showClef) {
+  //   console.log('CLEF >>>>>', measure.clef)
+  //   m.addClef(measure.clef);
+  // }
 
   if (showTimeSignature) {
     const timeSignature = measure.timeSignature || {};
@@ -115,15 +115,14 @@ class Score extends PureComponent {
     return (
       <div>
         {measures.map((measure, mindex) => {
+          console.log('mindex >>', mindex);
           let measureWidth = width / measures.length;
           let x = rowWidth;
           let y = measureHeight * staffCount;
           const prev = measures[mindex - 1];
-          const showClef = mindex === 0 || prev.clef !== measure.clef;
-          const showTimeSignature =
-            mindex === 0 ||
-            (prev.timeSignature.beatValue !== measure.timeSignature.beatValue &&
-              prev.timeSignature.numBeats !== measure.timeSignature.numBeats);
+          if (mindex === 0) {
+            console.log('>>>', showClef);
+          }
           let m = vfMeasure(
             measure,
             x,
@@ -142,7 +141,7 @@ class Score extends PureComponent {
 
           let vfVoices = Object.values(voiceIDToVFVoice);
 
-          vfVoices.forEach(v => v.setStave(m));
+          // vfVoices.forEach(v => v.setStave(m));
 
           const formatter = new Vex.Flow.Formatter()
             .joinVoices(vfVoices)
@@ -152,10 +151,10 @@ class Score extends PureComponent {
           if (minWidth > measureWidth) {
             measureWidth = minWidth;
             m = vfMeasure(measure, x, y, measureWidth);
-            vfVoices.forEach(v => v.setStave(m));
-            new Vex.Flow.Formatter()
-              .joinVoices(vfVoices)
-              .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
+            // vfVoices.forEach(v => v.setStave(m));
+            // new Vex.Flow.Formatter()
+            //   .joinVoices(vfVoices)
+            //   .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
           }
 
           rowWidth += measureWidth;
@@ -165,13 +164,18 @@ class Score extends PureComponent {
             y = measureHeight * staffCount;
             x = 0;
             m = vfMeasure(measure, x, y, measureWidth);
-            vfVoices.forEach(v => v.setStave(m));
-            new Vex.Flow.Formatter()
-              .joinVoices(vfVoices)
-              .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
+            // vfVoices.forEach(v => v.setStave(m));
+            // new Vex.Flow.Formatter()
+            //   .joinVoices(vfVoices)
+            //   .format(vfVoices, measureWidth - (m.getNoteStartX() - x));
             rowWidth = measureWidth;
           }
 
+          const showClef = x === 0 || prev.clef !== measure.clef;
+          const showTimeSignature =
+            x === 0 ||
+            (prev.timeSignature.beatValue !== measure.timeSignature.beatValue &&
+              prev.timeSignature.numBeats !== measure.timeSignature.numBeats);
           return (
             <Measure
               key={mindex}
@@ -181,6 +185,12 @@ class Score extends PureComponent {
               onMeasureClick={onMeasureClick}
               m={m}
               vfVoices={voiceIDToVFVoice}
+              clef={showClef}
+              timeSignature={showTimeSignature}
+              measure={measure}
+              width={measureWidth}
+              x={x}
+              y={y}
             />
           );
         })}
